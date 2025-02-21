@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git url:'https://github.com/abdulsamimmondal/java_pipeline, branch:'main'
+                git url:'https://github.com/abdulsamimmondal/java_pipeline', branch:'main'
             }
         }
 
