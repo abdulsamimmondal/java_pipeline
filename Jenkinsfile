@@ -2,15 +2,15 @@ pipeline {
     agent any
 
     environment {
-        SERVER_USER = 'tomcat'  // Tomcat user
-        SERVER_IP = 'localhost'  // If deploying locally
-        DEPLOY_PATH = '/opt/tomcat9/webapps/'  // Tomcat webapps path
+        SERVER_USER = 'tomcat'  // Change to your Tomcat server user
+        SERVER_IP = 'localhost'  // Change this if deploying remotely
+        DEPLOY_PATH = '/opt/tomcat9/webapps/'  // Change if your Tomcat path is different
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                git url: 'https://github.com/abdulsamimmondal/java_pipeline', branch: 'main'
+                git url:'https://github.com/KPkm25/java_jenkins', branch:'main'
             }
         }
 
@@ -26,14 +26,12 @@ pipeline {
             }
         }
 
-        stage('Deploy to Tomcat') {
-            steps {
-                // Add SSH key for SCP and SSH
-                withCredentials([sshUserPrivateKey(credentialsId: 'tomcat-ssh-key', keyFileVariable: 'SSH_KEY')]) {
-                    sh 'scp -i $SSH_KEY target/*.war $SERVER_USER@$SERVER_IP:$DEPLOY_PATH'
-                    sh 'ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "sudo -S systemctl restart tomcat"'
-                }
-            }
-        }
+stage('Deploy to Tomcat') {
+    steps {
+        sh 'scp target/*.war tomcat@localhost:/opt/tomcat9/webapps/'
+        sh 'ssh tomcat@localhost "sudo -S systemctl restart tomcat"'
+    }
+}
+
     }
 }
